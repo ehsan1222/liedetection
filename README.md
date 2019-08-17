@@ -1,1 +1,1 @@
-Lie Dection
+Lie Detection

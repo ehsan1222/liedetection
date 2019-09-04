@@ -2,6 +2,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 
 
 def naive_bayes_classifier(x_train, y_train, x_test):
@@ -29,4 +30,11 @@ def k_nearest_neighbor_classifier(x_train, y_train, x_test):
     knn = KNeighborsClassifier()
     knn.fit(x_train, y_train)
     y_predict = knn.predict(x_test)
+    return y_predict
+
+
+def multi_layer_perceptron_classifier(x_train, y_train, x_test):
+    mlp = MLPClassifier(hidden_layer_sizes=(5, 3))
+    mlp.fit(x_train, y_train)
+    y_predict = mlp.predict(x_test)
     return y_predict

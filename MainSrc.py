@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
+from sklearn.model_selection import train_test_split
 
 
 def transpose(data):
@@ -33,3 +34,5 @@ def get_data():
 
 if __name__ == "__main__":
     x_data, y_data = get_data()
+    x_train, y_train, x_test, y_test = train_test_split(x_data, y_data, test_size=.25, random_state=0)
+    

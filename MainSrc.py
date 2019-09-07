@@ -65,6 +65,34 @@ def cross_validation(y_predict, y_true, classification_name):
     return validate_data
 
 
+def select_thee_best_of_classifiers(list_of_validate_classifiers):
+    first_classifier_value = 0
+    first_classifier_validate = None
+    second_classifier_value = 0
+    second_classifier_validate = None
+    third_classifier_value = 0
+    third_classifier_validate = None
+
+    for classifier_validation in list_of_validate_classifiers:
+        if classifier_validation["correct"] > first_classifier_value:
+            third_classifier_value = second_classifier_value
+            third_classifier_validate = second_classifier_validate
+            second_classifier_value = first_classifier_value
+            second_classifier_validate = first_classifier_validate
+            first_classifier_value = classifier_validation["correct"]
+            first_classifier_validate = classifier_validation
+        elif classifier_validation["correct"] > second_classifier_value:
+            third_classifier_value = second_classifier_value
+            third_classifier_validate = second_classifier_validate
+            second_classifier_value = classifier_validation["correct"]
+            second_classifier_validate = classifier_validation
+        elif classifier_validation["correct"] > third_classifier_value:
+            third_classifier_value = classifier_validation["correct"]
+            third_classifier_validate = classifier_validation
+
+    return [first_classifier_validate, second_classifier_validate, third_classifier_validate]
+
+
 if __name__ == "__main__":
     # get eeg feature extracted data
     x_data, y_data = get_data()
@@ -86,3 +114,15 @@ if __name__ == "__main__":
     c_validate_knn = cross_validation(y_predict_knn, y_test, "knn")
     c_validate_mlp = cross_validation(y_predict_mlp, y_test, "mlp")
     c_validate_lda = cross_validation(y_predict_lda, y_test, "lda")
+
+    # select three best of classifiers
+    list_of_validate_classifiers = [
+        c_validate_svm,
+        c_validate_nb,
+        c_validate_knn,
+        c_validate_mlp,
+        c_validate_lda
+    ]
+    list_of_three_best_validate_classifiers = select_thee_best_of_classifiers(list_of_validate_classifiers)
+    for item in list_of_three_best_validate_classifiers:
+        print(item)

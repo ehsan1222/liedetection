@@ -34,7 +34,7 @@ def get_data():
     return x_combined, y_combined
 
 
-def cross_validation(y_predict, y_true, classification_name):
+def cross_validation(y_predict, y_true, classifier_name):
     correct_count = 0
     true_pos_count = 0
     false_pos_count = 0
@@ -60,7 +60,7 @@ def cross_validation(y_predict, y_true, classification_name):
         "true_neg": true_neg_count,
         "false_neg": false_neg_count,
         "rmse": root_mean_squared_error,
-        "alg": classification_name
+        "alg": classifier_name,
     }
     return validate_data
 
@@ -98,23 +98,23 @@ if __name__ == "__main__":
     x_data, y_data = get_data()
 
     # divide data to train and test with randomised algorithms
-    x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=.25, random_state=0)
+    x_train, x_next_step, y_train, y_next_step = train_test_split(x_data, y_data, test_size=.5)
+    x_next_step_train, x_test, y_next_step_train, y_test = train_test_split(x_next_step, y_next_step, test_size=.4)
 
     # classification
-    y_predict_svm = support_vector_machine_classifier(x_train, y_train, x_test)
-    y_predict_nb = naive_bayes_classifier(x_train, y_train, x_test)
-    y_predict_knn = k_nearest_neighbor_classifier(x_train, y_train, x_test)
-    y_predict_mlp = multi_layer_perceptron_classifier(x_train, y_train, x_test)
-    y_predict_lda = linear_discriminant_analysis_classifier(x_train, y_train, x_test)
+    y_predict_svm = support_vector_machine_classifier(x_train, y_train, x_next_step_train)
+    y_predict_nb = naive_bayes_classifier(x_train, y_train, x_next_step_train)
+    y_predict_knn = k_nearest_neighbor_classifier(x_train, y_train, x_next_step_train)
+    y_predict_mlp = multi_layer_perceptron_classifier(x_train, y_train, x_next_step_train)
+    y_predict_lda = linear_discriminant_analysis_classifier(x_train, y_train, x_next_step_train)
 
     # select three best classifiers
     # get classification accuracy
-    c_validate_svm = cross_validation(y_predict_svm, y_test, "svm")
-    c_validate_nb = cross_validation(y_predict_nb, y_test, "nb")
-    c_validate_knn = cross_validation(y_predict_knn, y_test, "knn")
-    c_validate_mlp = cross_validation(y_predict_mlp, y_test, "mlp")
-    c_validate_lda = cross_validation(y_predict_lda, y_test, "lda")
-
+    c_validate_svm = cross_validation(y_predict_svm, y_next_step_train, "svm")
+    c_validate_nb = cross_validation(y_predict_nb, y_next_step_train, "nb")
+    c_validate_knn = cross_validation(y_predict_knn, y_next_step_train, "knn")
+    c_validate_mlp = cross_validation(y_predict_mlp, y_next_step_train, "mlp")
+    c_validate_lda = cross_validation(y_predict_lda, y_next_step_train, "lda")
     # select three best of classifiers
     list_of_validate_classifiers = [
         c_validate_svm,
@@ -124,5 +124,4 @@ if __name__ == "__main__":
         c_validate_lda
     ]
     list_of_three_best_validate_classifiers = select_thee_best_of_classifiers(list_of_validate_classifiers)
-    for item in list_of_three_best_validate_classifiers:
-        print(item)
+
